@@ -255,7 +255,7 @@ all-pwd:
 
 .PHONY: run
 run:
-	cd ./cmd/otelcontribcol && GO111MODULE=on $(GOCMD) run --race . --config ../../${RUN_CONFIG} ${RUN_ARGS}
+	cd ./cmd/otelcontribcol && GO111MODULE=on CGO_ENABLED=1 $(GOCMD) run --race . --config ../../${RUN_CONFIG} ${RUN_ARGS}
 
 .PHONY: docker-component # Not intended to be used directly
 docker-component: check-component
