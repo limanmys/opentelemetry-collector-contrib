@@ -9,7 +9,7 @@ receivers:
         endpoint: 0.0.0.0:4318
 exporters:
   clickhouse:
-    endpoint: tcp://<CLICKHOUSE_ENDPOINT>:9000
+    endpoint: tcp://<CLICKHOUSE_IP>:9000
     database: otel
     username: default
     password: "1"
