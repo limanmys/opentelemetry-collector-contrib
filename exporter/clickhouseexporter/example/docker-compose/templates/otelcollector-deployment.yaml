@@ -22,10 +22,23 @@ spec:
       labels:
         io.kompose.service: otelcollector
     spec:
+      initContainers:
+        - name: wait-for
+          image: ghcr.io/patrickdappollonio/wait-for:latest
+          env:
+          - name: CLICKHOUSE_HOST
+            value: "clickhouse:9000"
+          command:
+            - /wait-for
+          args:
+            - --host="$(CLICKHOUSE_HOST)"
+            - -v
+            - -e10s
+            - -t120s
       containers:
         - args:
             - --config=/etc/otel-collector-config.yml
-            - --set=service.telemetry.logs.level=INFO
+            - --set=service.telemetry.logs.level=DEBUG
           image: harbor.bulut.ai/liman/exporter:latest
           name: otel
           ports:

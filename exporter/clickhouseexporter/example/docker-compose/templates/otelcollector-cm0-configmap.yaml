@@ -12,10 +12,8 @@ data:
             endpoint: 0.0.0.0:4318
     exporters:
       clickhouse:
-        endpoint: tcp://10.43.165.129:9000
-        database: default
-        username: default
-        password: "nzpH4uExN5"
+        endpoint: tcp://clickhouse:9000
+        database: otel
         logs_table_name: otel_logs
         traces_table_name: otel_traces
         ttl: 12h

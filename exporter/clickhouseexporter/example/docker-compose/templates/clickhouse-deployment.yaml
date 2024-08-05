@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clickhouse
+  creationTimestamp: null
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: clickhouse
+  template:
+    metadata:
+      labels:
+        service: clickhouse
+    spec:
+      initContainers:
+      containers:
+        - env:
+          image: clickhouse/clickhouse-server:latest
+          imagePullPolicy: Always
+          name: clickhouse
+          ports:
+            - containerPort: 8123
+              protocol: TCP
+            - containerPort: 9000
+              protocol: TCP
+      restartPolicy: Always
