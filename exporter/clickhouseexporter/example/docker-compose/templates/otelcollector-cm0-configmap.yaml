@@ -16,7 +16,7 @@ data:
         database: otel
         logs_table_name: otel_logs
         traces_table_name: otel_traces
-        ttl: 12h
+        ttl: 720h
         timeout: 10s
         sending_queue:
           queue_size: 100

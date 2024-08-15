@@ -24,4 +24,11 @@ spec:
               protocol: TCP
             - containerPort: 9000
               protocol: TCP
+          volumeMounts:
+            - mountPath: "/var/lib/clickhouse"
+              name: clickhouse-storage-pvc
       restartPolicy: Always
+      volumes:
+        - name: clickhouse-storage-pvc
+          persistentVolumeClaim:
+            claimName: clickhouse-storage-pvc
