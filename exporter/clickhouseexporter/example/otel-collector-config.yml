@@ -1,7 +1,7 @@
 extensions:
   oidc/server:
     issuer_url: http://<KC_URL>/realms/otel
-    audience: otel
+    audience: account
     attribute: authorization
 
 receivers:
@@ -18,9 +18,10 @@ receivers:
 
 exporters:
   debug:
+    verbosity: detailed
   clickhouse:
-    endpoint: tcp://<CLICKHOUSE_URL>
-    database: test6
+    endpoint: tcp://<CH_URL>
+    database: otel
     username: default
     password: "1"
     logs_table_name: otel_logs
@@ -46,3 +47,4 @@ service:
     traces:
      receivers: [otlp]
      exporters: [clickhouse, debug]
+     processors: [batch]
