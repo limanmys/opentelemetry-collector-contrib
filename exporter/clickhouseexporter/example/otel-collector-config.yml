@@ -1,16 +1,26 @@
+extensions:
+  oidc/server:
+    issuer_url: http://<KC_URL>/realms/otel
+    audience: otel
+    attribute: authorization
+
 receivers:
-  fluentforward:
-    endpoint: 0.0.0.0:24224
   otlp:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
+        auth:
+          authenticator: oidc/server
       http:
         endpoint: 0.0.0.0:4318
+        auth:
+          authenticator: oidc/server
+
 exporters:
+  debug:
   clickhouse:
-    endpoint: tcp://<CLICKHOUSE_IP>:9000
-    database: otel
+    endpoint: tcp://<CLICKHOUSE_URL>
+    database: test6
     username: default
     password: "1"
     logs_table_name: otel_logs
@@ -24,17 +34,15 @@ exporters:
       initial_interval: 5s
       max_interval: 30s
       max_elapsed_time: 300s
+
 processors:
  batch:
    timeout: 5s
    send_batch_size: 100000
+
 service:
+ extensions: [oidc/server]
  pipelines:
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [clickhouse]
     traces:
      receivers: [otlp]
-     processors: [batch]
-     exporters: [clickhouse]
+     exporters: [clickhouse, debug]

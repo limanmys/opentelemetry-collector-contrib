@@ -1,0 +1,25 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: localhost:5317
+      http:
+        endpoint: localhost:5318
+
+exporters:
+  debug:
+  otlphttp:
+    endpoint: http://<COLLECTOR_URL>
+    tls:
+      insecure: true
+    headers:
+      "authorization": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5RmdSb05qVHVBUEtSeUphY1hweER2UlVPY042SGVfVTZCTGNBaTBEU01RIn0.eyJleHAiOjE3MjUyODkyOTcsImlhdCI6MTcyNTI4MzI5NywianRpIjoiZWM2NDBkODItMjFiYi00Y2U5LWExMjItMTY5MGJkODQ0YTA0IiwiaXNzIjoiaHR0cDovLzEwLjE1MC40MC4xMjc6ODA4MC9yZWFsbXMvb3RlbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlZjcxOGExMy01Njk5LTRlNjMtOGYzZi1hMDQ4NTJiYmU0NDEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJvdGVsIiwic2Vzc2lvbl9zdGF0ZSI6IjkzOTQ3MGQxLTVjNGYtNDliNi1iZWQ3LTkwMDdjNjI1MTJlYSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtb3RlbCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIG90ZWwgcHJvZmlsZSIsInNpZCI6IjkzOTQ3MGQxLTVjNGYtNDliNi1iZWQ3LTkwMDdjNjI1MTJlYSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiZiB0IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZmF0aWh0ZXN0IiwiZ2l2ZW5fbmFtZSI6ImYiLCJmYW1pbHlfbmFtZSI6InQiLCJlbWFpbCI6ImZhdGlodGVzdEB0ZXN0LmNvbSJ9.nLih-zX7F3Z1Q5UcZ2R6JhsgKEM8QZ9Kgb2_u5l3wVDXs6XILcCUqWSofBo5rab1S3x_S-Jgc-yTJuMYFpnTuP43PrhAUSLyGAN7xNoe6W8kuPjQwfJEJnitbgMk9PPb75OZBG1_gcO4AuPbiZwfat8HA_ZLl0HXBWsBh_Sbt36fJIwIW-CjqaI7hkU2RRTMRjGbXWrS6ziWYrPJRzHzwqLOGAeA-mHTrc7_kGInLQQx4hV5zW2mvoMhEQ9NITkGn1v_yLnw-E8WkheQtw2acSf4PN3TksTzBtocQMdJRsEhnUi54G1kn9jeFfkqRcGWfhUSvJ0LsbVK2VONaL_TeA"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlphttp, debug]
+  telemetry:
+    metrics:
+      address: :8988

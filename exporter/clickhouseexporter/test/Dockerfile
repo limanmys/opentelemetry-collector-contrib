@@ -9,4 +9,4 @@ USER ${USER_UID}
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY otelcontribcol /otelcontribcol
 ENTRYPOINT ["/otelcontribcol"]
-EXPOSE 4317 4318 8888
+EXPOSE 5317 5318 8988

@@ -1,16 +1,16 @@
 services:
-  otelcollector:
+  otelcollectortest:
     build:
       context: ../../../local
-      dockerfile: ../exporter/clickhouseexporter/example/Dockerfile
-    container_name: otel
+      dockerfile: ../exporter/clickhouseexporter/test/Dockerfile
+    container_name: oteltest
     command:
       - "--config=/etc/otel-collector-config.yml"
       - "--set=service.telemetry.logs.level=DEBUG"
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
-      - "4317:4317"
-      - "4318:4318"
-      - "8888:8888"
+      - "5317:5317"
+      - "5318:5318"
+      - "8988:8988"
     network_mode: "bridge"
