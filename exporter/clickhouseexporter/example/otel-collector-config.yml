@@ -13,8 +13,6 @@ receivers:
           authenticator: oidc/server
       http:
         endpoint: 0.0.0.0:4318
-        auth:
-          authenticator: oidc/server
 
 exporters:
   debug:
@@ -26,7 +24,7 @@ exporters:
     password: "1"
     logs_table_name: otel_logs
     traces_table_name: otel_traces
-    ttl: 12h
+    ttl: 72h
     timeout: 10s
     sending_queue:
       queue_size: 100
