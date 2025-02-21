@@ -16,7 +16,7 @@ spec:
       initContainers:
       containers:
         - env:
-          image: clickhouse/clickhouse-server:latest
+          image: clickhouse/clickhouse-server:24.6.2
           imagePullPolicy: Always
           name: clickhouse
           ports:
