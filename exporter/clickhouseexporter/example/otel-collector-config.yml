@@ -1,16 +1,8 @@
-extensions:
-  oidc/server:
-    issuer_url: http://<KC_URL>/realms/otel
-    audience: account
-    attribute: authorization
-
 receivers:
   otlp:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
-        auth:
-          authenticator: oidc/server
       http:
         endpoint: 0.0.0.0:4318
 
@@ -18,13 +10,13 @@ exporters:
   debug:
     verbosity: detailed
   clickhouse:
-    endpoint: tcp://<CH_URL>
+    endpoint: tcp://192.168.1.96:9000
     database: otel
     username: default
-    password: "1"
+    password: ""
     logs_table_name: otel_logs
     traces_table_name: otel_traces
-    ttl: 72h
+    ttl: 720h
     timeout: 10s
     sending_queue:
       queue_size: 100
@@ -33,6 +25,35 @@ exporters:
       initial_interval: 5s
       max_interval: 30s
       max_elapsed_time: 300s
+  kafka:
+    topic: spans
+    brokers:
+      - "dell:9092"
+    client_id: "test_client_id"
+    metadata:
+      full: false
+      retry:
+        max: 15
+    producer:
+      max_message_bytes: 10000000
+      required_acks: -1 # WaitForAll
+    timeout: 10s
+    encoding: otlp_json
+    partition_traces_by_id: true
+    partition_metrics_by_resource_attributes: true
+    # auth:
+    #   plain_text:
+    #     username: jdoe
+    #     password: pass
+    sending_queue:
+      enabled: true
+      num_consumers: 2
+      queue_size: 10
+    retry_on_failure:
+      enabled: true
+      initial_interval: 10s
+      max_interval: 60s
+      max_elapsed_time: 10m
 
 processors:
  batch:
@@ -40,9 +61,9 @@ processors:
    send_batch_size: 100000
 
 service:
- extensions: [oidc/server]
+ extensions: []
  pipelines:
     traces:
      receivers: [otlp]
-     exporters: [clickhouse, debug]
+     exporters: [kafka, clickhouse, debug]
      processors: [batch]
