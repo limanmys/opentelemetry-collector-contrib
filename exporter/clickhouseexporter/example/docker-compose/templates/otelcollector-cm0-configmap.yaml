@@ -2,15 +2,16 @@ apiVersion: v1
 data:
   otel-collector-config.yml: |
     receivers:
-      fluentforward:
-        endpoint: 0.0.0.0:24224
       otlp:
         protocols:
           grpc:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+
     exporters:
+      debug:
+        verbosity: detailed
       clickhouse:
         endpoint: tcp://clickhouse:9000
         database: otel
@@ -25,20 +26,45 @@ data:
           initial_interval: 5s
           max_interval: 30s
           max_elapsed_time: 300s
+      kafka:
+        topic: t-havelsan
+        brokers:
+          - "kafka:9092"
+        client_id: "test_client_id"
+        metadata:
+          full: false
+          retry:
+            max: 15
+        producer:
+          max_message_bytes: 10000000
+          required_acks: -1 # WaitForAll
+        timeout: 10s
+        encoding: otlp_json
+        partition_traces_by_id: true
+        partition_metrics_by_resource_attributes: true
+        sending_queue:
+          enabled: true
+          num_consumers: 2
+          queue_size: 10
+        retry_on_failure:
+          enabled: true
+          initial_interval: 10s
+          max_interval: 60s
+          max_elapsed_time: 10m
+
     processors:
-     batch:
-       timeout: 5s
-       send_batch_size: 100000
+      batch:
+        timeout: 5s
+        send_batch_size: 100000
+
     service:
-     pipelines:
-        logs:
-          receivers: [otlp]
-          processors: [batch]
-          exporters: [clickhouse]
-        traces:
-         receivers: [otlp]
-         processors: [batch]
-         exporters: [clickhouse]
+      extensions: []
+      pipelines:
+          traces:
+           receivers: [otlp]
+           exporters: [kafka, clickhouse, debug]
+           processors: [batch]
+
 kind: ConfigMap
 metadata:
   annotations:
