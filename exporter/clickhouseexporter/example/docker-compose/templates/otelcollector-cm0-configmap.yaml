@@ -30,13 +30,13 @@ data:
         topic: t-havelsan
         brokers:
           - "kafka:9092"
-        client_id: "test_client_id"
+        client_id: "new_c_id"
         metadata:
           full: false
           retry:
             max: 15
         producer:
-          max_message_bytes: 10000000
+          max_message_bytes: 100000000
           required_acks: -1 # WaitForAll
         timeout: 10s
         encoding: otlp_json
@@ -55,7 +55,7 @@ data:
     processors:
       batch:
         timeout: 5s
-        send_batch_size: 100000
+        send_batch_size: 1000000
 
     service:
       extensions: []
